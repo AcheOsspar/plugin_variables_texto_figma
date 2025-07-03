@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <body style="font-family: sans-serif; padding: 12px;">
+    <h3>Variables de Texto</h3>
+    <label>Nombre de variable:</label><br>
+    <input id="var-name" placeholder="Ej: va-precio" style="width: 100%; margin-bottom: 6px;"><br>
+
+    <label>Valor:</label><br>
+    <input id="var-value" placeholder="Ej: 650.000" style="width: 100%; margin-bottom: 10px;"><br>
+
+    <button id="assign">Asignar a selección</button>
+
+    <hr style="margin: 15px 0;">
+    <h4>Variables guardadas</h4>
+    <div id="var-list"></div>
+    <button id="update">Actualizar variables</button>
+
+    <script>
+      const nameInput = document.getElementById("var-name");
+      const valueInput = document.getElementById("var-value");
+      const varList = document.getElementById("var-list");
+
+      document.getElementById("assign").onclick = () => {
+        const name = nameInput.value.trim();
+        const value = valueInput.value.trim();
+        if (name && value) {
+          parent.postMessage({ pluginMessage: { type: 'assign-variable', payload: { name, value } } }, '*');
+        }
+      };
+
+      document.getElementById("update").onclick = () => {
+        const inputs = varList.querySelectorAll("input");
+        const updates = {};
+        inputs.forEach(input => {
+          updates[input.dataset.varname] = input.value;
+        });
+        parent.postMessage({ pluginMessage: { type: 'update-values', payload: updates } }, '*');
+      };
+
+      window.onmessage = (event) => {
+        const { type, variables } = event.data.pluginMessage;
+        if (type === 'update-list') {
+          varList.innerHTML = '';
+          for (const [name, value] of Object.entries(variables)) {
+            const label = document.createElement('div');
+            label.innerHTML = `<b>${name}</b>`;
+            const input = document.createElement('input');
+            input.value = value;
+            input.dataset.varname = name;
+            input.style.width = '100%';
+            input.style.marginBottom = '10px';
+            varList.appendChild(label);
+            varList.appendChild(input);
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
