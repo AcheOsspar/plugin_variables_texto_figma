@@ -8,7 +8,7 @@
     <label>Valor:</label><br>
     <input id="var-value" placeholder="Ej: 650.000" style="width: 100%; margin-bottom: 10px;"><br>
 
-    <button id="assign">Asignar a selección</button>
+    <button id="create">Crear texto con variable</button>
 
     <hr style="margin: 15px 0;">
     <h4>Variables guardadas</h4>
@@ -20,12 +20,14 @@
       const valueInput = document.getElementById("var-value");
       const varList = document.getElementById("var-list");
 
-      document.getElementById("assign").onclick = () => {
+      document.getElementById("create").onclick = () => {
         const name = nameInput.value.trim();
         const value = valueInput.value.trim();
-        if (name && value) {
-          parent.postMessage({ pluginMessage: { type: 'assign-variable', payload: { name, value } } }, '*');
+        if (!name || !value) {
+          alert("Debes completar ambos campos.");
+          return;
         }
+        parent.postMessage({ pluginMessage: { type: 'create-variable-node', payload: { name, value } } }, '*');
       };
 
       document.getElementById("update").onclick = () => {

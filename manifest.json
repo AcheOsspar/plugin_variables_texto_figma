@@ -1,6 +1,6 @@
 {
   "name": "Variables de Texto Dinámicas",
-  "id": "variables-texto-dinamicas",
+  "id": "variables-texto-dinamicas-v3",
   "api": "1.0.0",
   "main": "code.js",
   "ui": "ui.html",
